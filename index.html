@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>函數與變量的解析</title>
+    <style>
+    h3{
+        color: red;
+    }
+    </style>
+</head>
+<body>
+    <h1>作用域：全局/局部變量＋預解析/逐行解析</h1>
+    <h3>當全局變量跟局部變量名稱一樣時</h3>
+    重點一：在函數中 當有一個全局變量跟函數中的變量(局部變量)名稱一樣時 以函數的變量為優先<br>
+    重點二：代碼不管怎樣都優先做“預解析” 在預解析中是先聲明一個變量 之後“逐行解析”時才會賦予值<br><br>
+    // 所以代碼由上而下跑的時候 首先在全局變量聲明一個a 然後到函數中 又要聲明函數裡的那一個a<br>
+    // 而這時候的函數裡的a 因為還沒有值 所以得到的結果就會是『我是函數裡面的undefined』<br>
+    // 之後在“逐行解析”下 寫出我是函數裡面的a後才給函數裡的a賦予值為2<br>
+    // 然後代碼繼續往下 這時候因為已跳出函數 所以函數外的a並沒受到函數裡的a影響<br>
+    // 其結果仍然是全局變量裡的1
+
+    <p id="p1"></p>
+    <p id="p2"></p>
+    <script>
+    var a = 1
+    function test(){
+        document.getElementById('p1').innerHTML='我是函數裡面的'+a
+        var a = 2
+    }
+    test()
+    document.getElementById('p2').innerHTML=a
+    </script>
+
+    <h3>以上一個案例為基礎做修改 在函數裡面傳參</h3>
+    // 這裏如果你調用函數時 有確實傳入參數 就會得到1然後2然後1<br>
+    // 如果沒有傳任何參數 單純調用函數 其結果就同上一個案例一樣為 undefined然後2<br><br>
+    #####這裏我用 console.log 看結果
+    <script>
+    var q=1
+    function test2(q){
+        console.log(q+',我是進到函數後的第一句 如果有確實傳參我就是傳進來的參 如果沒有傳 我就是undefined')
+        q=2
+        console.log(q+',我是函數裡q=2的下一句 由此可知我絕對是2')
+    }
+    test2(q)
+    console.log(q+',我是函數外面的q 我離開函數了所以函數裡面怎樣跟我無關 我以全局變量為準 所以我仍然是1')
+    test2()
+    </script>
+
+    <h3>當全局變量跟函數名稱一樣時</h3>
+    重點：當變量名跟函數名一樣時 只留函數<br><br>
+    // 代碼由上往下先做預解析 做完預解析後會得到一個聲明過的x 但是“同名只留函數” 所以逐行解析前x就是目前名為x的最後那個函數<br>
+    // 然後我們開始逐行解析 第一行輸出的x 就會是剛剛預解析後所得到的最後那個函數<br>
+    // 然後下一行聲明了x=1 往下走 跳過函數(因為沒調用函數 所以函數與我們無關) console.log(x)就是剛剛聲明的1 <br>
+    // 再往下又聲明x=3 那下一行console.log(x)當然就是3 再下去跳過函數又console.log(x)就仍然是3
+    <script>
+    console.log('我是第一行代碼：'+x)
+    var x=1
+    function x(){
+        console.log('11111')
+    }
+    console.log(x)
+    var x =3
+    console.log(x)
+    function x(){
+        console.log('22222')
+    }
+    console.log(x)
+    </script>
+</body>
+</html>
